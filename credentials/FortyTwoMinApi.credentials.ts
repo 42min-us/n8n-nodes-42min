@@ -2,6 +2,7 @@ import type {
 	IAuthenticateGeneric,
 	ICredentialTestRequest,
 	ICredentialType,
+	Icon,
 	INodeProperties,
 } from 'n8n-workflow';
 
@@ -10,9 +11,8 @@ export class FortyTwoMinApi implements ICredentialType {
 
 	displayName = '42min API';
 
-	// The rule expects an anchor into n8n's own docs. This is a community node, so
-	// it points at the vendor's API reference instead.
-	// eslint-disable-next-line n8n-nodes-base/cred-class-field-documentation-url-miscased
+	icon: Icon = { light: 'file:../icons/fortytwomin.svg', dark: 'file:../icons/fortytwomin.dark.svg' };
+
 	documentationUrl = 'https://42min.us/help/api';
 
 	properties: INodeProperties[] = [

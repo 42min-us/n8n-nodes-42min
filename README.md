@@ -113,17 +113,32 @@ behind a firewall.
 
 ```bash
 npm install
-npm run build
+npm run lint
 npm test
-npm link
-
-mkdir -p ~/.n8n/custom && cd ~/.n8n/custom
-npm init -y && npm link n8n-nodes-42min
-n8n start
 ```
 
-For the trigger you need a publicly reachable n8n, so use `n8n start --tunnel` during
+To run n8n with the node loaded and rebuilt on every change:
+
+```bash
+npm run dev
+```
+
+For the trigger you need a publicly reachable n8n, so use a tunnel during
 development.
+
+## Releasing
+
+Publishing happens in GitHub Actions, which attaches an npm provenance
+statement. n8n requires this: nodes published from a local machine are not
+accepted for verification.
+
+```bash
+npm version minor
+git push --follow-tags
+```
+
+Pushing the tag runs `.github/workflows/publish.yml`, which lints, builds and
+publishes. Update `CHANGELOG.md` in the same commit as the version bump.
 
 ## Resources
 

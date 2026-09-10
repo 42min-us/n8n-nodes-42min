@@ -6,7 +6,7 @@ import type {
 	IWebhookFunctions,
 	IWebhookResponseData,
 } from 'n8n-workflow';
-import { NodeOperationError } from 'n8n-workflow';
+import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 import {
 	fortyTwoMinApiRequest,
@@ -23,14 +23,14 @@ export class FortyTwoMinTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: '42min Trigger',
 		name: 'fortyTwoMinTrigger',
-		icon: 'file:fortytwomin.svg',
+		icon: { light: 'file:../../icons/fortytwomin.svg', dark: 'file:../../icons/fortytwomin.dark.svg' },
 		group: ['trigger'],
 		version: 1,
 		subtitle: '={{$parameter["events"].join(", ")}}',
 		description: 'Starts a workflow when something happens in 42min',
 		defaults: { name: '42min Trigger' },
 		inputs: [],
-		outputs: ['main'],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: 'fortyTwoMinApi', required: true }],
 		webhooks: [
 			{

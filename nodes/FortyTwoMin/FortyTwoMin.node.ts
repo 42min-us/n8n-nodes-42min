@@ -1,4 +1,5 @@
 import type { INodeType, INodeTypeDescription } from 'n8n-workflow';
+import { NodeConnectionTypes } from 'n8n-workflow';
 
 import { bookingFields, bookingOperations } from './descriptions/BookingDescription';
 import { eventTypeFields, eventTypeOperations } from './descriptions/EventTypeDescription';
@@ -9,14 +10,14 @@ export class FortyTwoMin implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: '42min',
 		name: 'fortyTwoMin',
-		icon: 'file:fortytwomin.svg',
+		icon: { light: 'file:../../icons/fortytwomin.svg', dark: 'file:../../icons/fortytwomin.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Read and write bookings, event types and availability in 42min',
 		defaults: { name: '42min' },
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.Main],
 		usableAsTool: true,
 		credentials: [{ name: 'fortyTwoMinApi', required: true }],
 		requestDefaults: {

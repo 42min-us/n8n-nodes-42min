@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The floor is what package.json declares; the ceiling catches breakage
+        # before the ecosystem moves onto it.
+        node: [20.15, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: node --test "test/*.test.js"
+
+      - name: Verify the published tarball carries the node
+        # `files` is easy to break silently: a wrong entry publishes a package
+        # that installs but exposes nothing.
+        run: |
+          npm pack --dry-run --json > /tmp/pack.json
+          node -e "
+            const files = require('/tmp/pack.json')[0].files.map((f) => f.path);
+            const pkg = require('./package.json');
+            const required = [...pkg.n8n.nodes, ...pkg.n8n.credentials, 'README.md', 'LICENSE'];
+            const missing = required.filter((f) => !files.includes(f));
+            if (missing.length) {
+              console.error('missing from the tarball:', missing);
+              process.exit(1);
+            }
+            if (!files.some((f) => f.endsWith('.svg'))) {
+              console.error('no icon in the tarball');
+              process.exit(1);
+            }
+            // n8n-node build does not copy these, so a lost build step would
+            // silently drop the node's categories and documentation links.
+            const codex = files.filter((f) => f.endsWith('.node.json'));
+            if (codex.length !== pkg.n8n.nodes.length) {
+              console.error('expected a codex file per node, found:', codex);
+              process.exit(1);
+            }
+            console.log('tarball carries all', required.length, 'required files, icons and', codex.length, 'codex files');
+          "
