@@ -24,7 +24,7 @@
     "url": "https://github.com/42min-us/n8n-nodes-42min/issues"
   },
   "engines": {
-    "node": ">=20.15"
+    "node": ">=20.19"
   },
   "main": "index.js",
   "scripts": {
@@ -38,6 +38,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [

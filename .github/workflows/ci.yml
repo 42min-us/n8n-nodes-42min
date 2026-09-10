@@ -15,9 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The floor is what package.json declares; the ceiling catches breakage
-        # before the ecosystem moves onto it.
-        node: [20.15, 22, 24]
+        # Node 20 is missing here on purpose. The published package is plain
+        # CommonJS with no runtime dependencies and runs fine on it, but the dev
+        # toolchain cannot be installed there: @n8n/node-cli pulls isolated-vm,
+        # whose native addon requires Node >= 24 and fails to compile on 20.x.
+        node: [22, 24]
     steps:
       - uses: actions/checkout@v4
 
