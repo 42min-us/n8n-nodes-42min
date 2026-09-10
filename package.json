@@ -1,0 +1,66 @@
+{
+  "name": "n8n-nodes-42min",
+  "version": "0.1.0",
+  "description": "n8n community node for 42min \u2014 scheduling, bookings and booking event triggers",
+  "keywords": [
+    "n8n-community-node-package",
+    "42min",
+    "scheduling",
+    "calendar",
+    "booking",
+    "meetings"
+  ],
+  "license": "MIT",
+  "homepage": "https://42min.us/help/api",
+  "author": {
+    "name": "42min",
+    "email": "support@42min.us"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/42min-us/n8n-nodes-42min.git"
+  },
+  "bugs": {
+    "url": "https://github.com/42min-us/n8n-nodes-42min/issues"
+  },
+  "engines": {
+    "node": ">=20.15"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "npx rimraf dist && tsc && gulp build:icons",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials package.json",
+    "lintfix": "eslint nodes credentials package.json --fix",
+    "prepublishOnly": "npm run build && npm run lint",
+    "test": "npm run build && node --test \"test/*.test.js\""
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/FortyTwoMinApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/FortyTwoMin/FortyTwoMin.node.js",
+      "dist/nodes/FortyTwoMin/FortyTwoMinTrigger.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-n8n-nodes-base": "^1.16.3",
+    "gulp": "^5.0.0",
+    "n8n-workflow": "*",
+    "prettier": "^3.3.3",
+    "rimraf": "^5.0.10",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
