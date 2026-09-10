@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-42min",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "n8n community node for 42min \u2014 scheduling, bookings and booking event triggers",
   "keywords": [
     "n8n-community-node-package",
@@ -14,7 +14,7 @@
   "homepage": "https://42min.us/help/api",
   "author": {
     "name": "42min",
-    "email": "support@42min.us"
+    "email": "plus@42min.us"
   },
   "repository": {
     "type": "git",

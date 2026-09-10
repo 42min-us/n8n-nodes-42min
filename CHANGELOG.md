@@ -6,6 +6,16 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1]
+
+### Fixed
+
+- `author.email` is now `plus@42min.us`, the address the package is actually
+  published from. It previously named a support address that was never a real
+  mailbox, which matters because npm metadata is where tooling looks to reach a
+  package owner: n8n's Creator Portal sends its ownership-verification token
+  there.
+
 ## [0.1.0]
 
 First release.
@@ -30,5 +40,6 @@ First release.
 - Cursor pagination on Return All that carries the caller's filters through
   every page.
 
-[Unreleased]: https://github.com/42min-us/n8n-nodes-42min/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/42min-us/n8n-nodes-42min/compare/0.1.1...HEAD
+[0.1.1]: https://github.com/42min-us/n8n-nodes-42min/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/42min-us/n8n-nodes-42min/releases/tag/0.1.0
