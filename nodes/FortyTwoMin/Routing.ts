@@ -84,6 +84,9 @@ export async function addIfMatch(
 	requestOptions: IHttpRequestOptions,
 ): Promise<IHttpRequestOptions> {
 	const uid = this.getNodeParameter('uid') as string;
+	// Bookings and series both lock with an ETag from a prior read.
+	const isSeries = (this.getNodeParameter('resource') as string) === 'series';
+	const noun = isSeries ? 'series' : 'booking';
 	const credentials = await this.getCredentials('fortyTwoMinApi');
 	const baseUrl = ((credentials.baseUrl as string) || 'https://api.42min.us').replace(/\/+$/, '');
 
@@ -92,7 +95,7 @@ export async function addIfMatch(
 		'fortyTwoMinApi',
 		{
 			method: 'GET',
-			url: `${baseUrl}/v1/bookings/${encodeURIComponent(uid)}`,
+			url: `${baseUrl}/v1/${isSeries ? 'series' : 'bookings'}/${encodeURIComponent(uid)}`,
 			headers: { Accept: 'application/json' },
 			returnFullResponse: true,
 			json: true,
@@ -104,8 +107,8 @@ export async function addIfMatch(
 	if (!etag) {
 		throw new NodeOperationError(
 			this.getNode(),
-			`Could not read an ETag for booking ${uid}, so the update was not attempted`,
-			{ description: 'Updating a booking requires the version token from a prior read.' },
+			`Could not read an ETag for ${noun} ${uid}, so the update was not attempted`,
+			{ description: `Updating a ${noun} requires the version token from a prior read.` },
 		);
 	}
 

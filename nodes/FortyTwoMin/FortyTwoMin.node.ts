@@ -3,6 +3,7 @@ import { NodeConnectionTypes } from 'n8n-workflow';
 
 import { bookingFields, bookingOperations } from './descriptions/BookingDescription';
 import { eventTypeFields, eventTypeOperations } from './descriptions/EventTypeDescription';
+import { seriesFields, seriesOperations } from './descriptions/SeriesDescription';
 import { slotFields, slotOperations } from './descriptions/SlotDescription';
 import { userFields, userOperations } from './descriptions/UserDescription';
 
@@ -14,7 +15,7 @@ export class FortyTwoMin implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Read and write bookings, event types and availability in 42min',
+		description: 'Read and write bookings, recurring series, event types and availability in 42min',
 		defaults: { name: '42min' },
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
@@ -36,6 +37,7 @@ export class FortyTwoMin implements INodeType {
 				options: [
 					{ name: 'Booking', value: 'booking' },
 					{ name: 'Event Type', value: 'eventType' },
+					{ name: 'Series', value: 'series' },
 					{ name: 'Slot', value: 'slot' },
 					{ name: 'User', value: 'user' },
 				],
@@ -46,11 +48,15 @@ export class FortyTwoMin implements INodeType {
 			...bookingFields,
 			...eventTypeOperations,
 			...eventTypeFields,
+			...seriesOperations,
+			...seriesFields,
 			...slotOperations,
 			...slotFields,
 			...userOperations,
 			...userFields,
 
+			// Two entries so each resource shows the field only on the operations that
+			// actually send the header (a series update locks with If-Match instead).
 			{
 				displayName: 'Idempotency Key',
 				name: 'idempotencyKey',
@@ -58,6 +64,17 @@ export class FortyTwoMin implements INodeType {
 				default: '',
 				displayOptions: {
 					show: { resource: ['booking'], operation: ['create', 'update', 'cancel', 'reschedule'] },
+				},
+				description:
+					'Leave empty to derive one from the execution and item. Set it to a stable value of your own, such as a CRM record ID, when the same logical operation may be attempted from more than one execution.',
+			},
+			{
+				displayName: 'Idempotency Key',
+				name: 'idempotencyKey',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: { resource: ['series'], operation: ['create', 'resume', 'end'] },
 				},
 				description:
 					'Leave empty to derive one from the execution and item. Set it to a stable value of your own, such as a CRM record ID, when the same logical operation may be attempted from more than one execution.',

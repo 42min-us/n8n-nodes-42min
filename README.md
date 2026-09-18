@@ -30,8 +30,8 @@ The node authenticates with a **personal access token**.
 1. In 42min, open **Settings → API** and create a token.
 2. Give it the scopes you need. For everything this node offers:
    `user:read`, `event_types:read`, `slots:read`, `bookings:read`, `bookings:create`,
-   `bookings:cancel`, `bookings:reschedule`, `bookings:update`, `webhooks:read`,
-   `webhooks:write`.
+   `bookings:cancel`, `bookings:reschedule`, `bookings:update`, `series:read`,
+   `series:write`, `webhooks:read`, `webhooks:write`.
 3. In n8n, create a **42min API** credential and paste the token.
 
 Use **Test** to confirm it works. Leave **Base URL** alone unless you run a
@@ -45,6 +45,7 @@ self-hosted 42min.
 |---|---|
 | **Booking** | Create, Get, Get Many, Update, Cancel, Reschedule |
 | **Event Type** | Get, Get Many |
+| **Series** | Create, Get, Get Many, Update, Pause, Resume, End, Change Host |
 | **Slot** | Get Many, Check |
 | **User** | Get Current |
 
@@ -58,6 +59,9 @@ Starts a workflow on any of these events:
 
 Activating a workflow registers a webhook subscription with 42min automatically, and
 deactivating it removes the subscription again.
+
+A booking that is one occurrence of a recurring series carries `series_id` and
+`series_index`, on trigger items and on lookups alike.
 
 ## Things worth knowing
 
@@ -85,6 +89,13 @@ execution, for example keyed on a CRM record id.
 **Get Event Type identifies by ID or by username plus slug.** A slug alone is not
 enough, since it is unique per user rather than per account. The node encodes the
 `username/slug` pair into the single path segment the API expects.
+
+**Recurring series skip busy dates rather than shifting them.** Creating a series
+books up to `count` occurrences; a date the host is not free on is left out, and the
+output lists what was created and what was skipped. The event type must have
+recurring meetings turned on. Updating a series reads it first to send its version
+token back, exactly like updating a booking, and a pattern change rebooks the
+upcoming occurrences onto the new dates.
 
 **Check the slot before you book.** Use **Slot: Check** first. A slot that was free a
 moment ago may not be, and Create Booking sends real email and writes to a real

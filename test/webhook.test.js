@@ -155,3 +155,21 @@ test('keeps the British spelling the contract fixes', () => {
 	assert.equal(item.cancelled_at, '2026-09-11T00:00:00.000Z');
 	assert.equal(item.cancellation_reason, 'conflict');
 });
+
+test('keeps the series fields on an occurrence of a recurring series', () => {
+	// These two are snake_case even in the camelCase delivery, and the trigger used
+	// to build its output from a fixed field list that left them out, so a workflow
+	// could not tell a series occurrence from a one-off booking.
+	const item = normalizeBookingEvent({
+		event: 'booking.created',
+		data: { booking: { id: 'bk_9', series_id: 'sr_1', series_index: 3 } },
+	});
+	assert.equal(item.series_id, 'sr_1');
+	assert.equal(item.series_index, 3);
+});
+
+test('reports a one-off booking as belonging to no series', () => {
+	const item = normalizeBookingEvent({ data: { booking: { id: 'bk_10' } } });
+	assert.equal(item.series_id, null);
+	assert.equal(item.series_index, null);
+});

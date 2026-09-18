@@ -174,6 +174,10 @@ export function normalizeBookingEvent(envelope: IDataObject): IDataObject {
 		previous_end_at: previous?.endTime ?? null,
 		previous_timezone: previous?.timezone ?? null,
 
+		// Set when the booking is one occurrence of a recurring series.
+		series_id: booking.series_id ?? null,
+		series_index: booking.series_index ?? null,
+
 		cancelled_at: booking.cancelledAt ?? null,
 		cancellation_reason: booking.cancelledReason ?? null,
 		no_show_at: booking.noShowAt ?? null,

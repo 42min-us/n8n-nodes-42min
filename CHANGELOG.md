@@ -6,6 +6,21 @@ All notable changes to this package are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Added
+
+- **Series** resource for recurring meetings: Create, Get, Get Many, Update,
+  Pause, Resume, End and Change Host. Creating, resuming and ending send an
+  `Idempotency-Key`; updating reads the series first and sends its ETag back as
+  `If-Match`, the same way booking updates do.
+
+### Fixed
+
+- The trigger dropped `series_id` and `series_index`. It builds its output from a
+  fixed list of fields and those two were not on it, so a workflow started by an
+  occurrence of a recurring series could not tell it from a one-off booking.
+
 ## [0.1.1]
 
 ### Fixed
@@ -40,6 +55,7 @@ First release.
 - Cursor pagination on Return All that carries the caller's filters through
   every page.
 
-[Unreleased]: https://github.com/42min-us/n8n-nodes-42min/compare/0.1.1...HEAD
+[Unreleased]: https://github.com/42min-us/n8n-nodes-42min/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/42min-us/n8n-nodes-42min/compare/0.1.1...0.2.0
 [0.1.1]: https://github.com/42min-us/n8n-nodes-42min/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/42min-us/n8n-nodes-42min/releases/tag/0.1.0
